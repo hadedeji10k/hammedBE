@@ -1,0 +1,27 @@
+Admin Routes
+
+post - admin register (where admin can register as an admin) **_
+get - user by ID by admin (where admin can get users by ID) _**
+get - All users by Admin(Where admin can get all users) **_
+get - All users by Admin by Query(Where admin can get all users)
+get - Get Dashboard Info _**
+
+Auth Routes
+
+post - register User (where user can register) **_
+post - login User (where user can login) _**
+post - verify User (where user gets verified by email)
+post - forgot-password (where user forgot password)
+post - reset password (where user resets password)
+post - change password (where user change password without forgetting) \*\*\*
+
+Comments Routes
+
+post - add a comment (where user/admin can make a comment) **_
+put - update a comment (where user can edit/update a comment) _**
+delete - deletes a comment (where user/admin can delete a comment) \*\*\*
+
+Profile Routes
+
+get - Get a user by ID after the user signs up to get user details **_
+put - Update a user (where user details can be updated) _**
