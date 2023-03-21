@@ -29,6 +29,7 @@ const {
   resetPasswordValidation,
 } = require("../validations/password");
 
+// register a user
 router.post("/register", userValidation(), userValidate, async (req, res) => {
   await registerUser(req.body, res);
 });
@@ -76,9 +77,9 @@ router.get("/user-profile", auth, async (req, res) => {
 // UPDATE A USER PROFILE
 router.put(
   "/user-profile/:id",
+  auth,
   updateUserValidation(),
   updateUserValidate,
-  auth,
   async (req, res) => {
     await updateUser(req, res);
   }

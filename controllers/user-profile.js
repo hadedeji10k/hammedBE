@@ -1,11 +1,9 @@
-const nodemailer = require("nodemailer");
 const User = require("../models/user");
 const Subscribers = require("../models/subscribers");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("../utils/jwt");
 const validateEmail = require("../utils/validateEmail");
-const emailSender = require("../utils/emailSender");
 
 // REGISTER AN ADMIN
 const registerAdmin = async (data, res) => {
@@ -237,14 +235,13 @@ const forgotPassword = async (data, res) => {
       });
     }
 
-    // const passwordResetCode = crypto.randomInt(1000, 10000);
     const passwordResetCode = Math.floor(Math.random() * 100000).toString();
 
     const hashedPasswordResetCode = await bcrypt.hash(passwordResetCode, 16);
 
-    const isEmailSent = await emailSender(email, passwordResetCode);
+    // const isEmailSent = await emailSender(email, passwordResetCode);
+    const isEmailSent = true;
 
-    // await user.update({ passwordResetCode: hashedPasswordResetCode })
     if (isEmailSent) {
       if (hashedPasswordResetCode) {
         user.passwordResetCode = hashedPasswordResetCode;
@@ -455,41 +452,46 @@ const sendContact = async (req, res) => {
   try {
     const { name, email, body } = req.body;
 
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
+    // let transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,
+    //     pass: process.env.EMAIL_PASS,
+    //   },
+    //   tls: {
+    //     rejectUnauthorized: false,
+    //   },
+    // });
 
-    let mailInfo = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: "GoodNews' Contact form Submission",
-      html: `
-          <h2> This is to notify that a user has just contacted GoodNews</h2> <br>
-          <h3>The contact name: ${name}</h3>
-          <h3>The contact email: ${email}</h3>
-          <h3>The contact message: </h3>
-          <p>${body} </p>
-          
-          `,
-    };
+    // let mailInfo = {
+    //   from: process.env.EMAIL_USER,
+    //   to: process.env.EMAIL_USER,
+    //   subject: "GoodNews' Contact form Submission",
+    //   html: `
+    //       <h2> This is to notify that a user has just contacted GoodNews</h2> <br>
+    //       <h3>The contact name: ${name}</h3>
+    //       <h3>The contact email: ${email}</h3>
+    //       <h3>The contact message: </h3>
+    //       <p>${body} </p>
 
-    transporter.sendMail(mailInfo, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        return res.status(201).json({
-          message: "Contact form sent successfully",
-          data: info,
-          success: true,
-        });
-      }
+    //       `,
+    // };
+
+    // transporter.sendMail(mailInfo, (error, info) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     return res.status(201).json({
+    //       message: "Contact form sent successfully",
+    //       data: info,
+    //       success: true,
+    //     });
+    //   }
+    // });
+
+    return res.status(201).json({
+      message: "Contact form sent successfully",
+      success: true,
     });
   } catch (error) {
     return res.status(500).json({

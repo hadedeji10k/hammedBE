@@ -42,7 +42,6 @@ router.get("/hotels/:id", async (req, res) => {
 });
 
 // ADD ONE HOTEL
-// , , isAuthourized(["admin"]),
 router.post(
   "/hotels",
   auth,
@@ -55,9 +54,10 @@ router.post(
 );
 
 // UPDATE A HOTEL
-// , isAuthourized(["admin"]),
 router.put(
   "/hotels/:id",
+  auth,
+  isAdmin,
   hotelValidation(),
   hotelValidate,
   async (req, res) => {
@@ -66,12 +66,11 @@ router.put(
 );
 
 // DELETE A HOTEL
-router.delete("/hotels/:id", async (req, res) => {
+router.delete("/hotels/:id", auth, isAdmin, async (req, res) => {
   await deleteHotel(req, res);
 });
 
 // ADD COMMENT
-// , ,
 router.post(
   "/comments",
   auth,
@@ -83,7 +82,6 @@ router.post(
 );
 
 // UPDATE A COMMENT
-// , ,
 router.put(
   "/comments/:id",
   auth,
@@ -95,7 +93,6 @@ router.put(
 );
 
 // DELETE A COMMENT
-// ,
 router.delete("/comments/:commentId", auth, async (req, res) => {
   await deleteComment(req, res);
 });

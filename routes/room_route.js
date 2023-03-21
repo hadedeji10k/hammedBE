@@ -37,7 +37,6 @@ router.get("/rooms/:id", async (req, res) => {
 });
 
 // ADD ONE ROOM
-// , , isAuthourized(["admin"]),
 router.post(
   "/rooms",
   auth,
@@ -50,7 +49,6 @@ router.post(
 );
 
 // UPDATE A ROOM
-// , isAuthourized(["admin"]),
 router.put(
   "/rooms/:id",
   updateRoomValidation(),

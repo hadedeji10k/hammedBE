@@ -25,10 +25,13 @@ const UserSchema = new Schema(
     image: {
       type: String,
     },
+    nameOfSchool: {
+      type: String,
+    },
     role: {
       type: String,
       default: "user",
-      enum: ["user", "admin"],
+      enum: ["user", "student", "admin"],
     },
     userHotelComment: [
       {
