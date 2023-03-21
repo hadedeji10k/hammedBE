@@ -14,6 +14,8 @@ const {
   changeUserPassword,
 } = require("../controllers/user-profile");
 
+const { getUserBookings } = require("../controllers/room");
+
 const {
   updateUserValidate,
   updateUserValidation,
@@ -27,13 +29,6 @@ const {
   resetPasswordValidation,
 } = require("../validations/password");
 
-// REGISTER A USER
-/*
-    #swagger.tags = ['Admin]
-    #swagger.security = [{
-        "Authorization" : []
-    }]
-*/
 router.post("/register", userValidation(), userValidate, async (req, res) => {
   await registerUser(req.body, res);
 });
@@ -88,6 +83,11 @@ router.put(
     await updateUser(req, res);
   }
 );
+
+// Get user booking
+router.get("/user-booking", auth, async (req, res) => {
+  await getUserBookings(req, res);
+});
 
 router.post("/subscribe", async (req, res) => {
   await subscribe(req, res);

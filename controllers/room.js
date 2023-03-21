@@ -1,5 +1,6 @@
 const Room = require("../models/room");
 const Hotel = require("../models/hotel");
+const Booking = require("../models/booking");
 
 // GET ALL ROOM
 const getAllRoom = async (req, res) => {
@@ -234,11 +235,32 @@ const deleteRoom = async (req, res) => {
   }
 };
 
+// GET USER BOOKINGS
+const getUserBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: { _id: req.userId } })
+      .sort({ createdAt: -1 })
+      .exec();
+
+    return res.status(201).json({
+      message: "Bookings fetched Successfully!",
+      data: bookings,
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 module.exports = {
   getAllRoom,
   getAllRoomByQuery,
   getRoomsByHotelID,
   getOneRoom,
+  getUserBookings,
   addRoom,
   updateRoom,
   deleteRoom,

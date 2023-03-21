@@ -9,10 +9,7 @@ const RoomSchema = new Schema(
     },
     capacity: Number,
     price: Number,
-    assets: {
-      tv: { type: Boolean, default: false },
-      projector: { type: Boolean, default: false },
-    },
+    assets: [String],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

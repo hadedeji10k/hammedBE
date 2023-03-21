@@ -17,6 +17,19 @@ const roomValidation = () => {
   ];
 };
 
+const updateRoomValidation = () => {
+  return [
+    check("capacity")
+      .trim()
+      .isLength({ min: 2, max: 50 })
+      .withMessage("Room's capacity is required"),
+    check("price")
+      .trim()
+      .isLength({ min: 1, max: 50 })
+      .withMessage("Room's price is required"),
+  ];
+};
+
 const roomValidate = (req, res, next) => {
   const errs = validationResult(req);
   if (!errs.isEmpty()) {
@@ -35,15 +48,15 @@ const hotelValidation = () => {
   return [
     check("name")
       .trim()
-      .isLength({ min: 2, max: 50 })
+      .isLength({ min: 2 })
       .withMessage("Hotel's name is required"),
     check("description")
       .trim()
-      .isLength({ min: 1, max: 50 })
+      .isLength({ min: 1 })
       .withMessage("Hotel's description is required"),
     check("location")
       .trim()
-      .isLength({ min: 1, max: 50 })
+      .isLength({ min: 1 })
       .withMessage("Hotel's location is required"),
     check("star")
       .trim()
@@ -92,6 +105,7 @@ const commentValidate = (req, res, next) => {
 
 module.exports = {
   roomValidate,
+  updateRoomValidation,
   roomValidation,
   commentValidation,
   commentValidate,

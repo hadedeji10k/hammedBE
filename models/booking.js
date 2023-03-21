@@ -12,6 +12,10 @@ const BookingSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    room: {
+      type: Schema.Types.ObjectId,
+      ref: "Room",
+    },
   },
   { timestamps: true }
 );

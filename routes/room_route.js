@@ -13,8 +13,7 @@ const {
 const {
   roomValidate,
   roomValidation,
-  commentValidation,
-  commentValidate,
+  updateRoomValidation,
 } = require("../validations/room");
 
 // GET ALL ROOM
@@ -52,9 +51,14 @@ router.post(
 
 // UPDATE A ROOM
 // , isAuthourized(["admin"]),
-router.put("/rooms/:id", roomValidation(), roomValidate, async (req, res) => {
-  await updateRoom(req, res);
-});
+router.put(
+  "/rooms/:id",
+  updateRoomValidation(),
+  roomValidate,
+  async (req, res) => {
+    await updateRoom(req, res);
+  }
+);
 
 // DELETE A ROOM
 router.delete("/rooms/:id", async (req, res) => {
