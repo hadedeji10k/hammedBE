@@ -5,9 +5,7 @@ const BookingSchema = new Schema(
   {
     bookingStart: { type: Date },
     bookingEnd: { type: Date },
-    startHour: { type: Number },
-    duration: { type: Number },
-    purpose: { type: String, required: true },
+    purpose: { type: String },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

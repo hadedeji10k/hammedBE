@@ -176,6 +176,92 @@ const addRoom = async (req, res) => {
   }
 };
 
+// Check For Room Availability
+const checkForAvailability = async (req, res) => {
+  try {
+    let { roomId, bookingStart, bookingEnd } = req.body;
+
+    const bookings = Booking.find({
+      room: { _id: roomId },
+      $or: [
+        {
+          bookingStart: { $lt: bookingEnd },
+          bookingEnd: { $gt: bookingStart },
+        },
+        {
+          bookingStart: { $gte: bookingEnd },
+          bookingEnd: { $gt: bookingStart },
+        },
+      ],
+    });
+
+    if (bookings.length > 0) {
+      return res.status(400).json({
+        message: "The room is already booked for the requested period",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "The room is available for the requested period",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+// Book A Room
+const bookARoom = async (req, res) => {
+  try {
+    let { roomId, bookingStart, bookingEnd, purpose } = req.body;
+
+    const bookings = await Booking.find({
+      room: { _id: roomId },
+      $or: [
+        {
+          bookingStart: { $lt: bookingEnd },
+          bookingEnd: { $gt: bookingStart },
+        },
+        {
+          bookingStart: { $gte: bookingEnd },
+          bookingEnd: { $gt: bookingStart },
+        },
+      ],
+    });
+
+    if (bookings.length > 0) {
+      return res.status(400).json({
+        message: "The room is already booked for the requested period",
+        success: false,
+      });
+    }
+
+    const newBooking = new Booking({
+      room: roomId,
+      user: req.userId,
+      bookingStart,
+      bookingEnd,
+      purpose,
+    });
+
+    newBooking.save();
+
+    return res.status(200).json({
+      message: "Room has been booked successfully.",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
 // UPDATE ROOM
 const updateRoom = async (req, res) => {
   try {
@@ -238,13 +324,32 @@ const deleteRoom = async (req, res) => {
 // GET USER BOOKINGS
 const getUserBookings = async (req, res) => {
   try {
+    const currentPage = parseInt(req.query?.pageNumber || "1");
+    const limit = parseInt(req.query?.pageSize || "20");
+    const skip = limit * (currentPage - 1);
+
+    const totalCountOfBookings = await Booking.countDocuments({});
+
+    const totalPages = Math.ceil(totalCountOfBookings / limit);
+    const hasPrevious = currentPage > 1 && totalPages > 1;
+    const hasNext = currentPage < totalPages;
+
     const bookings = await Booking.find({ user: { _id: req.userId } })
       .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skip)
+      .lean()
       .exec();
 
     return res.status(201).json({
-      message: "Bookings fetched Successfully!",
-      data: bookings,
+      message: "User Bookings Fetched Successfully!",
+      result: bookings,
+      currentPage,
+      pageSize: limit,
+      totalPages,
+      totalCountOfBookings,
+      hasPrevious,
+      hasNext,
       success: true,
     });
   } catch (error) {
@@ -262,6 +367,8 @@ module.exports = {
   getOneRoom,
   getUserBookings,
   addRoom,
+  checkForAvailability,
+  bookARoom,
   updateRoom,
   deleteRoom,
 };

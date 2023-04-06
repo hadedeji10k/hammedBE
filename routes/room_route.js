@@ -6,6 +6,8 @@ const {
   getRoomsByHotelID,
   getOneRoom,
   addRoom,
+  checkForAvailability,
+  bookARoom,
   updateRoom,
   deleteRoom,
 } = require("../controllers/room");
@@ -47,6 +49,16 @@ router.post(
     await addRoom(req, res);
   }
 );
+
+// Check for room availability
+router.post("/rooms/booking/available", async (req, res) => {
+  await checkForAvailability(req, res);
+});
+
+// Book a room
+router.post("/rooms/booking", auth, async (req, res) => {
+  await bookARoom(req, res);
+});
 
 // UPDATE A ROOM
 router.put(

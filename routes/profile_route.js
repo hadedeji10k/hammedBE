@@ -3,9 +3,6 @@ const { auth } = require("../middlewares/auth-middleware");
 const {
   getOneUser,
   updateUser,
-  subscribe,
-  unSubscribe,
-  sendContact,
   registerUser,
   loginUser,
   verifyEmail,
@@ -88,18 +85,6 @@ router.put(
 // Get user booking
 router.get("/user-booking", auth, async (req, res) => {
   await getUserBookings(req, res);
-});
-
-router.post("/subscribe", async (req, res) => {
-  await subscribe(req, res);
-});
-
-router.delete("/unsubscribe", async (req, res) => {
-  await unSubscribe(req, res);
-});
-
-router.post("/send-contact-form", async (req, res) => {
-  await sendContact(req, res);
 });
 
 module.exports = router;

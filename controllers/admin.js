@@ -50,7 +50,7 @@ const getBookings = async (req, res) => {
       .lean()
       .exec();
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Bookings Fetched Successfully!",
       result: bookings,
       currentPage,
