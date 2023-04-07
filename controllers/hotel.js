@@ -109,6 +109,7 @@ const addHotel = async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       location: req.body.location,
+      image: req.body.image,
       star: Number(req.body.star),
       createdBy: req.userId,
     });

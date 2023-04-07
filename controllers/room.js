@@ -181,7 +181,7 @@ const checkForAvailability = async (req, res) => {
   try {
     let { roomId, bookingStart, bookingEnd } = req.body;
 
-    const bookings = Booking.find({
+    const bookings = await Booking.find({
       room: { _id: roomId },
       $or: [
         {
@@ -328,7 +328,9 @@ const getUserBookings = async (req, res) => {
     const limit = parseInt(req.query?.pageSize || "20");
     const skip = limit * (currentPage - 1);
 
-    const totalCountOfBookings = await Booking.countDocuments({});
+    const totalCountOfBookings = await Booking.countDocuments({
+      user: { _id: req.userId },
+    });
 
     const totalPages = Math.ceil(totalCountOfBookings / limit);
     const hasPrevious = currentPage > 1 && totalPages > 1;
@@ -336,6 +338,13 @@ const getUserBookings = async (req, res) => {
 
     const bookings = await Booking.find({ user: { _id: req.userId } })
       .sort({ createdAt: -1 })
+      .populate({
+        path: "room",
+        populate: {
+          path: "hotel",
+          model: "Hotel",
+        },
+      })
       .limit(limit)
       .skip(skip)
       .lean()

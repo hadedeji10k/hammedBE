@@ -45,6 +45,14 @@ const getBookings = async (req, res) => {
 
     const bookings = await Booking.find({})
       .sort({ createdAt: -1 })
+      .populate("user")
+      .populate({
+        path: "room",
+        populate: {
+          path: "hotel",
+          model: "Hotel",
+        },
+      })
       .limit(limit)
       .skip(skip)
       .lean()
