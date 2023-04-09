@@ -5,7 +5,6 @@ const BookingSchema = new Schema(
   {
     bookingStart: { type: Date },
     bookingEnd: { type: Date },
-    purpose: { type: String },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

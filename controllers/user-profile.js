@@ -1,5 +1,4 @@
 const User = require("../models/user");
-const Subscribers = require("../models/subscribers");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("../utils/jwt");
@@ -142,8 +141,8 @@ const loginUser = async (data, res) => {
 
     if (!passwordMatch)
       return res.status(404).json({
-        type: "Invalid Credentials",
-        message: "Password Incorrect",
+        type: "Invalid Credentials.",
+        message: "Invalid Credentials.",
         success: false,
       });
 

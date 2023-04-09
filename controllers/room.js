@@ -217,7 +217,7 @@ const checkForAvailability = async (req, res) => {
 // Book A Room
 const bookARoom = async (req, res) => {
   try {
-    let { roomId, bookingStart, bookingEnd, purpose } = req.body;
+    let { roomId, bookingStart, bookingEnd } = req.body;
 
     const bookings = await Booking.find({
       room: { _id: roomId },
@@ -245,13 +245,71 @@ const bookARoom = async (req, res) => {
       user: req.userId,
       bookingStart,
       bookingEnd,
-      purpose,
     });
 
     newBooking.save();
 
     return res.status(200).json({
       message: "Room has been booked successfully.",
+      success: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      success: false,
+    });
+  }
+};
+
+// Book Multiple Room
+const bookMultipleRoom = async (req, res) => {
+  try {
+    let body = req.body;
+
+    for (let i = 0; i < body.length; i++) {
+      const element = body[i];
+
+      const bookings = await Booking.find({
+        room: { _id: element.roomId },
+        $or: [
+          {
+            bookingStart: { $lt: element.bookingEnd },
+            bookingEnd: { $gt: element.bookingStart },
+          },
+          {
+            bookingStart: { $gte: element.bookingEnd },
+            bookingEnd: { $gt: element.bookingStart },
+          },
+        ],
+      });
+
+      if (bookings.length > 0) {
+        return res.status(400).json({
+          message: `The room of ${
+            new Date(element.bookingStart).toISOString().split("T")[0]
+          } to ${
+            new Date(element.bookingEnd).toISOString().split("T")[0]
+          } is already booked for the requested period. Change the booking period and try again.`,
+          success: false,
+        });
+      }
+    }
+
+    for (let i = 0; i < body.length; i++) {
+      const element = body[i];
+
+      const newBooking = new Booking({
+        room: element.roomId,
+        user: req.userId,
+        bookingStart: element.bookingStart,
+        bookingEnd: element.bookingEnd,
+      });
+
+      newBooking.save();
+    }
+
+    return res.status(200).json({
+      message: "Rooms have been booked successfully.",
       success: true,
     });
   } catch (error) {
@@ -378,6 +436,7 @@ module.exports = {
   addRoom,
   checkForAvailability,
   bookARoom,
+  bookMultipleRoom,
   updateRoom,
   deleteRoom,
 };

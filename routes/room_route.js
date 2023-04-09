@@ -8,6 +8,7 @@ const {
   addRoom,
   checkForAvailability,
   bookARoom,
+  bookMultipleRoom,
   updateRoom,
   deleteRoom,
 } = require("../controllers/room");
@@ -58,6 +59,11 @@ router.post("/rooms/booking/available", async (req, res) => {
 // Book a room
 router.post("/rooms/booking", auth, async (req, res) => {
   await bookARoom(req, res);
+});
+
+// Book multiple room
+router.post("/rooms/booking/multiple", auth, async (req, res) => {
+  await bookMultipleRoom(req, res);
 });
 
 // UPDATE A ROOM
